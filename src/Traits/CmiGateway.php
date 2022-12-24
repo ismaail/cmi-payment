@@ -41,7 +41,7 @@ trait CmiGateway
         if ($postData) {
             $cmiClient = new Cmi();
 
-            if ($_POST['ProcReturnCode'] === '00' && $cmiClient->validateHash($postData, $postData['HASH'])) {
+            if ($postData['ProcReturnCode'] === '00' && $cmiClient->validateHash($postData, $postData['HASH'])) {
                 $response = 'ACTION=POSTAUTH';
             } else {
                 $response = 'FAILURE';
