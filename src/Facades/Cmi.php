@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Combindma\Cmi\Facades;
 
 use Illuminate\Support\Facades\Facade;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  */
 class Cmi extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return \Combindma\Cmi\Cmi::class;
     }

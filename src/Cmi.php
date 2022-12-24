@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Combindma\Cmi;
 
-use Combindma\Cmi\Exceptions\InvalidConfiguration;
 use Combindma\Cmi\Exceptions\InvalidRequest;
+use Combindma\Cmi\Exceptions\InvalidConfiguration;
 
 class Cmi
 {
@@ -194,15 +196,16 @@ class Cmi
     {
         $plainText = '';
         ksort($data);
+
         foreach ($data as $key => $value) {
             $formattedValue = trim($value);
-            $formattedValue = str_replace("|", "\\|", str_replace("\\", "\\\\", $formattedValue));
-            if (strtolower($key) != 'hash' && strtolower($key) != 'encoding') {
-                $plainText = $plainText . $formattedValue . "|";
+            $formattedValue = str_replace('|', "\\|", str_replace('\\', '\\\\', $formattedValue));
+            if (strtolower($key) !== 'hash' && strtolower($key) !== 'encoding') {
+                $plainText .= $formattedValue . '|';
             }
         }
 
-        $escapedStoreKey = str_replace("|", "\\|", str_replace("\\", "\\\\", $this->storeKey));
+        $escapedStoreKey = str_replace('|', '\|', str_replace('\\', '\\\\', $this->storeKey));
 
         return $plainText . $escapedStoreKey;
     }
@@ -216,25 +219,28 @@ class Cmi
     {
         $this->unsetData($data);
         $postParams = [];
+
         foreach ($data as $key => $value) {
             array_push($postParams, $key);
         }
+
         natcasesort($postParams);
 
-        $hashval = "";
+        $hashval = '';
+
         foreach ($postParams as $param) {
-            $paramValue = trim(html_entity_decode(preg_replace("/\n$/", "", $data[$param]), ENT_QUOTES, 'UTF-8'));
-            $escapedParamValue = str_replace("|", "\\|", str_replace("\\", "\\\\", $paramValue));
+            $paramValue = trim(html_entity_decode(preg_replace("/\n$/", '', $data[$param]), ENT_QUOTES, 'UTF-8'));
+            $escapedParamValue = str_replace('|', "\\|", str_replace("\\", "\\\\", $paramValue));
             $escapedParamValue = preg_replace('/document(.)/i', 'document.', $escapedParamValue);
 
             $lowerParam = strtolower($param);
-            if ($lowerParam != "hash" && $lowerParam != "encoding") {
-                $hashval = $hashval . $escapedParamValue . "|";
+            if ($lowerParam !== 'hash' && $lowerParam !== 'encoding') {
+                $hashval .= $escapedParamValue . '|';
             }
         }
 
-        $escapedStoreKey = str_replace("|", "\\|", str_replace("\\", "\\\\", $this->storeKey));
-        $hashval = $hashval . $escapedStoreKey;
+        $escapedStoreKey = str_replace('|', "\\|", str_replace('\\', '\\\\', $this->storeKey));
+        $hashval .= $escapedStoreKey;
 
         $calculatedHashValue = hash('sha512', $hashval);
         $hash = base64_encode(pack('H*', $calculatedHashValue));

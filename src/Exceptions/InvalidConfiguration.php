@@ -1,9 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Combindma\Cmi\Exceptions;
 
 use Exception;
 
+/**
+ * @phpcs:disable Generic.Files.LineLength.TooLong
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class InvalidConfiguration extends Exception
 {
     public static function storeKeyNotSpecified(): static
@@ -28,17 +34,17 @@ class InvalidConfiguration extends Exception
 
     public static function attributeNotSpecified(string $attribute): static
     {
-        return new static('Aucun(e) '.$attribute.' n\'a été renseigné(e). Veuillez le renseigner.');
+        return new static("Aucun(e) $attribute n'a été renseigné(e). Veuillez le renseigner.");
     }
 
     public static function attributeInvalidString(string $attribute): static
     {
-        return new static('La valeur de '.$attribute.' renseignée n\'est pas valide. Veuillez reseigner un(e) '.$attribute.' qui ne contient aucun espace ou une chaîne de caractère vide.');
+        return new static("La valeur de $attribute renseignée n'est pas valide. Veuillez reseigner un(e) $attribute qui ne contient aucun espace ou une chaîne de caractère vide.");
     }
 
     public static function attributeInvalidUrl(string $attribute): static
     {
-        return new static('L\'url '.$attribute.' renseigné n\'est pas valide. Veuillez reseigner un lien valide.');
+        return new static("L'url $attribute renseigné n'est pas valide. Veuillez reseigner un lien valide.");
     }
 
     public static function langValueInvalid(): static

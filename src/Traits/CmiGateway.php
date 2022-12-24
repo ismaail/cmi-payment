@@ -1,14 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Combindma\Cmi\Traits;
 
 use Combindma\Cmi\Cmi;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\RedirectResponse;
 
+/**
+ * @phpcs:disable Generic.Files.LineLength.TooLong
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 trait CmiGateway
 {
-    public function requestPayment(Cmi $cmiClient, array $params = [])
+    public function requestPayment(Cmi $cmiClient, array $params = []): View|RedirectResponse
     {
         try {
             $cmiClient->guardAgainstInvalidRequest();
@@ -17,24 +25,29 @@ trait CmiGateway
         } catch (\Exception $e) {
             Log::error($e);
 
-            return redirect($cmiClient->getShopUrl())->withErrors(['payment' => __('Une erreur est survenue au niveau de la requête, veuillez réessayer ultérieurement.')]);
+            return redirect($cmiClient->getShopUrl())
+                ->withErrors([
+                    'payment' => __('Une erreur est survenue au niveau de la requête, veuillez réessayer ultérieurement.'),
+                ]);
         }
 
         return view('cmi::request-payment', compact('cmiClient', 'payData', 'hash'));
     }
 
-    public function callback(Request $request)
+    public function callback(Request $request): View
     {
         $postData = $request->all();
+
         if ($postData) {
             $cmiClient = new Cmi();
-            if ($cmiClient->validateHash($postData, $postData['HASH']) && $_POST["ProcReturnCode"] == "00") {
-                $response = "ACTION=POSTAUTH";
+
+            if ($_POST['ProcReturnCode'] === '00' && $cmiClient->validateHash($postData, $postData['HASH'])) {
+                $response = 'ACTION=POSTAUTH';
             } else {
-                $response = "FAILURE";
+                $response = 'FAILURE';
             }
         } else {
-            $response = "No Data POST";
+            $response = 'No Data POST';
         }
 
         return view('cmi::callback', compact('response'));
@@ -63,6 +76,9 @@ trait CmiGateway
         //Par défaut nous redirigeons l'utilisateur vers la page shopUrl avec un message d'erreur
         $cmiClient = new Cmi();
 
-        return redirect($cmiClient->getShopUrl())->withErrors(['payment' => __('Paiement échoué, une erreur est survenue lors de la transaction, veuillez réessayer ultérieurement.')]);
+        return redirect($cmiClient->getShopUrl())
+            ->withErrors([
+                'payment' => __('Paiement échoué, une erreur est survenue lors de la transaction, veuillez réessayer ultérieurement.'),
+            ]);
     }
 }

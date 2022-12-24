@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Combindma\Cmi;
 
 use Spatie\LaravelPackageTools\Package;
@@ -17,8 +19,6 @@ class CmiServiceProvider extends PackageServiceProvider
 
     public function packageRegistered()
     {
-        $this->app->bind('cmi', function ($app) {
-            return new Cmi();
-        });
+        $this->app->bind('cmi', fn () => new Cmi());
     }
 }
