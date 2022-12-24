@@ -1,7 +1,8 @@
 {
-	"name": "combindma/cmi-payment",
+	"name": "ismaail/cmi-payment",
 	"description": "Laravel package to communicate with the CMI payment plateform",
 	"keywords": [
+		"ismaail",
 		"combindma",
 		"laravel",
 		"cmi-payment"
@@ -9,6 +10,11 @@
 	"homepage": "https://github.com/combindma/cmi-payment",
 	"license": "MIT",
 	"authors": [
+		{
+			"name": "ismaail",
+			"email": "contact@ismaail.com",
+			"role": "Developer"
+		},
 		{
 			"name": "Combind",
 			"email": "webmaster@combind.ma",
