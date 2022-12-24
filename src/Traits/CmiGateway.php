@@ -23,7 +23,7 @@ trait CmiGateway
             $payData = $cmiClient->getCmiData($params);
             $hash = $cmiClient->getHash($params);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage());
 
             return redirect($cmiClient->getShopUrl())
                 ->withErrors([
